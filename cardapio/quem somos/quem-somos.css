@@ -1,0 +1,208 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f2f2f2;
+  color: #333;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(90deg, #0044ff, #ffffff, #0044ff);
+  background-size: 300% 300%; /* Para criar o efeito de movimento */
+  color: #fff;
+  padding: 40px 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  animation: gradientMove 6s infinite; /* Animação do gradiente */
+  opacity: 0; /* Invisível inicialmente */
+  animation: fadeIn 1.5s ease-in-out forwards, gradientMove 6s infinite; /* Combina fade-in e gradiente */
+}
+
+/* Animação de fade-in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px); /* Move o cabeçalho para cima no início */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* Retorna à posição original */
+  }
+}
+
+/* Animação do gradiente */
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Estilização do título no cabeçalho */
+header h1 {
+  font-size: 2.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: fadeIn 2s ease-in-out forwards; /* Aplica o fade-in ao título */
+}
+
+nav {
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px 0;
+  border-radius: 15px;
+}
+
+nav ul {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #000000;
+  padding: 10px 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+nav ul li a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background-color: #20289e;
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+nav ul li a span {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+nav ul li a:hover span {
+  transform: rotate(15deg);
+}
+
+nav ul li a:hover {
+  background: rgba(117, 112, 112, 0.3);
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+nav ul li a:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+.container {
+  max-width: 960px;
+  width: 90%;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+}
+
+section {
+  margin-bottom: 40px;
+}
+
+section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: #000000;
+  text-align: center;
+  animation-delay: 0.2s;
+}
+
+section p,
+section ul {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  text-align: justify;
+}
+
+section p {
+  animation-delay: 0.4s;
+}
+
+section ul {
+  padding-left: 20px;
+}
+
+section ul li {
+  margin-bottom: 10px;
+  animation-delay: 0.6s;
+}
+
+section h2, section p, section ul li {
+  animation: fadeIn 1s ease-in-out;
+  opacity: 0; /* Garante que o texto esteja invisível antes da animação */
+  animation-fill-mode: forwards; /* Mantém o estado final da animação */
+}
+
+footer {
+  margin-top: auto;
+  background-color: #222;
+  color: #ccc;
+  text-align: center;
+  padding: 25px;
+  justify-content: end;
+  align-items: end;
+  flex-direction: column;
+  gap: 10px;  
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: #ff6600;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px 0;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .container {
+    padding: 15px;
+  }
+}
