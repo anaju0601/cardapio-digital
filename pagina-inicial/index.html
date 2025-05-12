@@ -4,42 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pastelaria Sabor Brasil</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
-<body style= "background-image: url('restaurante.jpg'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+<body style="background-image: url('restaurante.jpg'); background-size: cover; background-repeat: no-repeat; background-position: center;">
 
-  <header class="hero">
-    <h1>Pastelaria Sabor Brasil</h1>
-    <p>Delícias crocantes para todos os gostos!</p>
+  <header class="text-center text-white py-5 bg-dark bg-opacity-75">
+    <h1 class="display-4">Pastelaria Sabor Brasil</h1>
+    <p class="lead">Delícias crocantes para todos os gostos!</p>
   </header>
 
-  <main class="menu-opcoes">
-    <section class="opcao">
-      <img src="pastelsalgado.png" alt="Pastéis Salgados">
-      <h2>Pastéis Salgados</h2>
-      <p>Sabores tradicionais e especiais.</p>
-      <a href="pasteis-salgados.html" class="botao">Ver Salgados</a>
-    </section>
+  <main class="container py-5">
+    <div class="row g-4 justify-content-center">
 
-    <section class="opcao">
-      <img src="pasteldoce.jpg" alt="Pastéis Doces">
-      <h2>Pastéis Doces</h2>
-      <p>Delícias açucaradas para adoçar seu dia.</p>
-      <a href="pasteis-doces.html" class="botao">Ver Doces</a>
-    </section>
+      <section class="col-md-4 text-center bg-white bg-opacity-75 rounded p-4 shadow">
+        <img src="pastelsalgado.png" alt="Pastéis Salgados" class="img-fluid rounded mb-3">
+        <h2 class="h4">Pastéis Salgados</h2>
+        <p>Sabores tradicionais e especiais.</p>
+        <a href="pasteis-salgados.html" class="btn btn-warning">Ver Salgados</a>
+      </section>
 
-    <section class="opcao">
-      <img src="refri.webp" alt="Bebidas">
-      <h2>Bebidas</h2>
-      <p>Bebidas para acompanhar seu pastel.</p>
-      <a href="bebidas.html" class="botao">Ver Bebidas</a>
-    </section>
+      <section class="col-md-4 text-center bg-white bg-opacity-75 rounded p-4 shadow">
+        <img src="pasteldoce.jpg" alt="Pastéis Doces" class="img-fluid rounded mb-3">
+        <h2 class="h4">Pastéis Doces</h2>
+        <p>Delícias açucaradas para adoçar seu dia.</p>
+        <a href="pasteis-doces.html" class="btn btn-warning">Ver Doces</a>
+      </section>
+
+      <section class="col-md-4 text-center bg-white bg-opacity-75 rounded p-4 shadow">
+        <img src="refri.webp" alt="Bebidas" class="img-fluid rounded mb-3">
+        <h2 class="h4">Bebidas</h2>
+        <p>Bebidas para acompanhar seu pastel.</p>
+        <a href="bebidas.html" class="btn btn-warning">Ver Bebidas</a>
+      </section>
+
+    </div>
   </main>
 
-
-    <footer>
-        <p>&copy; 2025 Pastelaria Sabor Brasil. Todos os direitos reservados.</p>
-        <p>Desenvolvido por Augusto, Ana, Lucas, Enzo e Giovanni.</p>
+  <footer class="text-center bg-dark text-light py-3 mt-auto">
+    <p>&copy; 2025 Pastelaria Sabor Brasil. Todos os direitos reservados.</p>
+    <p>Desenvolvido por Augusto, Ana, Lucas, Enzo e Giovanni.</p>
+  </footer>
 
 </body>
 </html>
