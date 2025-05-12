@@ -1,0 +1,26 @@
+name: ci
+run-name: Pipeline de integração contínua e análise de código
+on: 
+    push: 
+        branches:
+            - main
+
+jobs:
+    ci: 
+        name: Build and Analyze
+        runs-on: ubuntu-latest
+        
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                fetch-depth: 0  
+            - uses: SonarSource/sonarqube-scan-action@v5
+              env:
+                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+                SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+              with:
+                args: >
+                    -Dsonar.projectKey=site-trabalho
+                    -Dsonar.projectName=site-trabalho
+                    -Dsonar.projectVersion=1.0
+                    -Dsonar.sources=.
