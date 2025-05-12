@@ -1,0 +1,131 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fff8f0;
+    color: #4e2c1e;
+    line-height: 1.6;
+    background-image: url('restaurante.jpg'); /* Substitua pela imagem desejada */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 50px;
+}
+
+/* Estilo do cabeçalho */
+.hero {
+    background: linear-gradient(135deg, #462202, #1d1305);
+    color: white;
+    text-align: center;
+    padding: 50px 200px;
+    border-radius: 10px;
+    animation: fadeIn 1s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero p {
+    font-size: 1.2rem;
+    font-weight: 300;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* Estilo do cardápio */
+.cardapio {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    gap: 150px;
+    margin-top: 80px;
+}
+
+.item {
+    background-color: #fff3e0;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: slideUp 0.8s ease-in-out;
+}
+
+.item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+
+.item img:hover {
+    transform: scale(1.05);
+}
+
+.item p {
+    margin: 10px 0;
+    color: #6b3e00;
+}
+
+.item .preco {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #b04500;
+}
+
+/* Estilo do rodapé */
+footer {
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    position: relative;
+    margin-top: 100px;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
