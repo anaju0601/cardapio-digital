@@ -36,4 +36,4 @@ jobs:
         with: 
           app-name: pastelaria-facul-digital
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-          image: anajulia06/faculdade-digital-cardapio:latest
+          images: anajulia06/faculdade-digital-cardapio:latest
