@@ -33,7 +33,9 @@ jobs:
         working-directory: integration-test
 
       - name: Run Cypress tests
-        run: npx cypress run
+        run: |
+          export TERM=dumb
+          npx cypress run --headless
         working-directory: integration-test
 
       - name: SonarQube Analysis
