@@ -27,14 +27,14 @@ jobs:
                 context: .
                 file: ./Dockerfile
                 push: true
-                tags: anajulia06/cardapio-digital:latest
+                tags: anajulia06/cardapio-digital1:latest
             
             - name: Azure Deploy
               uses: Azure/webapps-deploy@v3.0.1
               with: 
                 app-name: cd-pastelaria-sabor-brasil
                 publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-                image: anajulia06/cardapio-digital:latest
+                image: anajulia06/cardapio-digital1:latest
     
     integration-test:
         name: test-e2e
