@@ -26,14 +26,14 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: jobgrupo/cardapio-digital:latest
+          tags: anajulia06/cardapio-digital123:latest
 
       - name: Azure Deploy
         uses: Azure/webapps-deploy@v3.0.1
         with: 
-          app-name: cd-pastelaria-sabor-brasil
+          app-name: cardapio-digital-facul
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-          image: jobgrupo/cardapio-digital:latest
+          image: anajulia06/cardapio-digital123:latest
 
   integration-test:
     runs-on: ubuntu-latest
