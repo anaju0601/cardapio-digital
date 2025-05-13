@@ -4,46 +4,64 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pastelaria Sabor Brasil</title>
-  <link rel="stylesheet" href="pasteis-salgados.css" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <header class="hero">
-    <h1>Pastelaria Sabor Brasil</h1>
-    <p>Sabores irresistíveis para todos os gostos!</p>
+  <header class="hero text-center py-5">
+    <h1 class="display-4">Pastéis Salgados</h1>
+    <p class="lead">Sabores irresistíveis para todos os gostos!</p>
   </header>
 
-  <main class="cardapio">
-    <section class="item">
-      <img src="carne.webp" alt="Pastel de Carne">
-      <p>Carne moída bem temperada com cebola e azeitonas.</p>
-      <p class="preco">R$ 8,00</p>
-    </section>
 
-    <section class="item">
-      <img src="pastelsalgado.png" alt="Pastel de Queijo">
-      <p>Mussarela derretida com toque especial da casa.</p>
-      <p class="preco">R$ 7,00</p>
-    </section>
+  <main class="container my-5">
+    <div class="row justify-content-center gy-4">
+      <div class="col-md-4">
+        <section class="item">
+          <img src="carne.webp" alt="Pastel de Carne" class="img-fluid rounded">
+          <h2>Pastel de Carne</h2>
+          <p>Carne moída bem temperada com cebola e azeitonas.</p>
+          <p class="preco">R$ 8,00</p>
+        </section>
+      </div>
 
-    <section class="item">
-      <img src="frango.png" alt="Pastel de Frango com Catupiry">
-      <p>Frango temperado e desfiado com catupiry cremoso.</p>
-      <p class="preco">R$ 9,00</p>
-    </section>
+      <div class="col-md-4">
+        <section class="item">
+          <img src="pastelsalgado.png" alt="Pastel de Queijo" class="img-fluid rounded">
+          <h2>Pastel de Queijo</h2>
+          <p>Mussarela derretida com toque especial da casa.</p>
+          <p class="preco">R$ 7,00</p>
+        </section>
+      </div>
 
-    <section class="item">
-        <img src="pizza.jpg" alt="Pastel de Pizza">
-        <p>Mussarela, tomate, orégano, azeitona e presunto.</p>
-        <p class="preco">R$ 8,50</p>
-      </section>
+      <div class="col-md-4">
+        <section class="item">
+          <img src="frango.png" alt="Pastel de Frango com Catupiry" class="img-fluid rounded">
+          <h2>Pastel de Frango com Catupiry</h2>
+          <p>Frango temperado e desfiado com catupiry cremoso.</p>
+          <p class="preco">R$ 9,00</p>
+        </section>
+      </div>
+
+      <div class="col-md-4">
+        <section class="item">
+          <img src="pizza.jpg" alt="Pastel de Pizza" class="img-fluid rounded">
+          <h2>Pastel de Pizza</h2>
+          <p>Mussarela, tomate, orégano, azeitona e presunto.</p>
+          <p class="preco">R$ 8,50</p>
+        </section>
+      </div>
+    </div>
   </main>
-    
 
-
-  <footer>
+  <footer class="text-white text-center py-4">
     &copy; 2025 Pastelaria Sabor Brasil. Todos os direitos reservados.
   </footer>
 
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
