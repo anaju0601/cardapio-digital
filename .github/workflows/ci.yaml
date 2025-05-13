@@ -31,7 +31,7 @@ jobs:
         working-directory: integration-test
 
       - name: Run Cypress tests (Electron, headless, CI)
-        run: npx cypress run --browser electron --headless
+        run: npx cypress run --browser electron --headless --project .
         working-directory: integration-test
 
       - name: SonarQube Analysis
