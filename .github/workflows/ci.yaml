@@ -55,6 +55,6 @@ jobs:
       - name: Azure Deploy
         uses: Azure/webapps-deploy@v3.0.1
         with:
-          app-name: pastelaria-faculi-digital
+          app-name: pastelaria-facul-digital
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
           images: anajulia06/faculdade-digital-cardapio:latest
