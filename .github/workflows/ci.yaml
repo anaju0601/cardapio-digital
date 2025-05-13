@@ -1,24 +1,49 @@
 name: ci
 run-name: Pipeline de integração contínua e análise de código
+
 on: 
-    push: 
-        branches:           
-            - main
+  push: 
+    branches:           
+      - main
 
 jobs:
-    ci: 
-        name: Build and Analyze
-        runs-on: ubuntu-latest
+  ci: 
+    name: Build and Analyze
+    runs-on: ubuntu-latest
 
-        steps:          
-            - uses: actions/checkout@v4
-              with:
-                fetch-depth: 0
-            - uses: SonarSource/sonarqube-scan-action@v5
-              env:
-                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-                SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-              with:
-                args: >
-                    -Dsonar.projectKey=cardapio-digital-tentativa15
-                    -Dsonar.projectName=cardapio-digital-Dsonar.projectVersion=1.0-Dsonar.sources=.
+    steps:          
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: integration-test
+
+      - name: Fix Cypress permissions
+        run: |
+          npx cypress install
+          chmod +x ./node_modules/.bin/cypress
+        working-directory: integration-test
+
+      - name: Run Cypress tests
+        run: npx cypress run
+        working-directory: integration-test
+
+      - name: SonarQube Analysis
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=cardapio-digital-tentativa15
+            -Dsonar.projectName=cardapio-digital
+            -Dsonar.projectVersion=1.0
+            -Dsonar.sources=.
