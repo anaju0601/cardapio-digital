@@ -33,7 +33,7 @@ jobs:
       - name: Start Web Server
         run: |
           npm install -g http-server
-          nohup http-server ./pagina-inicial --port 5500 &
+          nohup http-server ./cardapio-digital --port 5500 &
         working-directory: .
 
       - name: Run Cypress tests
