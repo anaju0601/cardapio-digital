@@ -26,11 +26,17 @@ jobs:
         run: npm ci
         working-directory: integration-test
 
-      - name: Install Cypress binary (headless CI-safe)
+      - name: Install Cypress binary
         run: npx cypress install
         working-directory: integration-test
 
-      - name: Run Cypress tests (Electron, headless, CI)
+      - name: Start Web Server
+        run: |
+          npm install -g http-server
+          nohup http-server ./pagina-inicial --port 5500 &
+        working-directory: .
+
+      - name: Run Cypress tests
         run: npx cypress run --browser electron --headless --project .
         working-directory: integration-test
 
