@@ -1,6 +1,6 @@
 describe('Navegando na Página de Pastéis Salgados', () => {
     beforeEach(() => {
-        cy.visit('/pasteis-salgados.html')
+        cy.visit('/index.html')
     })
 
     it('Deve carregar a página de Pastéis Salgados', () => {
