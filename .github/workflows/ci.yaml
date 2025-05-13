@@ -51,3 +51,10 @@ jobs:
             -Dsonar.projectName=cardapio-digital
             -Dsonar.projectVersion=1.0
             -Dsonar.sources=.
+
+      - name: Azure Deploy
+        uses: Azure/webapps-deploy@v3.0.1
+        with:
+          app-name: pastelaria-faculi-digital
+          publish-profile: ${{ secrets.PUBLISH_PROFILE }}
+          images: anajulia06/faculdade-digital-cardapio:latest

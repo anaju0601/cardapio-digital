@@ -1,5 +1,7 @@
 FROM nginx:alpine
 
-COPY . /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html
+
+COPY index.html bebidas.html style.css *.jpg *.png *.webp ./
 
 EXPOSE 80
