@@ -26,16 +26,12 @@ jobs:
         run: npm ci
         working-directory: integration-test
 
-      - name: Fix Cypress permissions
-        run: |
-          npx cypress install
-          chmod +x ./node_modules/.bin/cypress
+      - name: Install Cypress binary (headless CI-safe)
+        run: npx cypress install
         working-directory: integration-test
 
-      - name: Run Cypress tests
-        run: |
-          export TERM=dumb
-          npx cypress run --headless
+      - name: Run Cypress tests (Electron, headless, CI)
+        run: npx cypress run --browser electron --headless
         working-directory: integration-test
 
       - name: SonarQube Analysis
