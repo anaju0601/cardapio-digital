@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - main
-      
+
   pull_request:
     branches:
       - main
@@ -38,7 +38,7 @@ jobs:
         with: 
           app-name: cardapio-digital-facul
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-          image: anajulia06/cardapio-digital123:latest
+          images: anajulia06/cardapio-digital123:latest
 
   integration-test:
     runs-on: ubuntu-latest
