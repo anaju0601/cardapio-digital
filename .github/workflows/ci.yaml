@@ -1,26 +1,54 @@
 name: ci
 run-name: Pipeline de integração contínua e análise de código
-on: 
-    push: 
-        branches:
-            - main
+
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-    ci: 
-        name: Build and Analyze
-        runs-on: ubuntu-latest
-        
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                fetch-depth: 0  
-            - uses: SonarSource/sonarqube-scan-action@v5
-              env:
-                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-                SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-              with:
-                args: >
-                    -Dsonar.projectKey=cardapio-digital-tentativa15
-                    -Dsonar.projectName=cardapio-digital
-                    -Dsonar.projectVersion=1.0
-                    -Dsonar.sources=.
+  ci:
+    name: Build and Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=cardapio-digital-tentativa15
+            -Dsonar.projectName=cardapio-digital
+            -Dsonar.projectVersion=1.0
+            -Dsonar.sources=.
+
+  integration-test:
+    name: Cypress Integration Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: integration-test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Ensure Cypress binary has execute permission
+        run: chmod +x ./node_modules/.bin/cypress || true
+
+      - name: Run Cypress tests
+        run: npx cypress run
+
+                    
