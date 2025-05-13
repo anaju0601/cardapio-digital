@@ -1,71 +1,63 @@
 name: continous-deployment
 run-name: Deploy do site
-
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
+    pull_request:
+        branches:
+            - main
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+    deploy:
+        name: deploy
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4.2.2
+              with:
+                fetch-depth: 0
+            
+            - name: Docker login
+              uses: docker/login-action@v3.4.0
+              with:
+                username: ${{ secrets.DOCKER_USER }}
+                password: ${{ secrets.DOCKER_PASSWORD }}
+            
+            - name: Docker Build and Push
+              uses: docker/build-push-action@v6.16.0
+              with:
+                context: .
+                file: ./Dockerfile
+                push: true
+                tags: anajulia06/faculdade-digital-cardapio:latest
+            
+            - name: Azure Deploy
+              uses: Azure/webapps-deploy@v3.0.1
+              with: 
+                app-name: pastelaria-facul-digital
+                publish-profile: ${{ secrets.PUBLISH_PROFILE }}
+                image: anajulia06/faculdade-digital-cardapio:latest
+    
+    integration-test:
+        name: test-e2e
+        runs-on: ubuntu-latest
+        needs: deploy
 
-      - name: Docker login
-        uses: docker/login-action@v3.4.0
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4.2.2
+              with:
+                fetch-depth: 0
+            
+            - name: Setup Nodejs
+              uses: actions/setup-node@v3.9.1
+              with:
+                node-version: '20'
+            
+            - name: Install packages
+              run: |
+                cd integration-test
+                npm install
 
-      - name: Docker Build and Push
-        uses: docker/build-push-action@v6.16.0
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: anajulia06/cardapio-digital123:latest
-
-      - name: Azure Deploy
-        uses: Azure/webapps-deploy@v3.0.1
-        with: 
-          app-name: cardapio-digital-facul
-          publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-          images: anajulia06/cardapio-digital123:latest
-
-  integration-test:
-    runs-on: ubuntu-latest
-    needs: deploy
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.2.2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3.9.1
-        with:
-          node-version: '20'
-
-      - name: Install packages
-        run: |
-          cd integration-test
-          npm install
-
-      - name: Install Cypress binary
-        run: |
-          cd integration-test
-          npx cypress install
-
-      - name: Fix Cypress permissions
-        run: |
-          chmod +x integration-test/node_modules/.bin/cypress
-
-      - name: Run Cypress E2E Test
-        run: |
-          cd integration-test
-          npx cypress run
+            - name: Run Cypress E2E Test
+              run: |
+                cd integration-test
+                npx cypress run
