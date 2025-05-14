@@ -19,3 +19,12 @@ A primeira configuração define uma pipeline de integração contínua (CI) que
 
 Pipeline de Entrega Contínua (CD):
 A segunda configuração define uma pipeline de entrega contínua (CD), também acionada por push na branch main. Ela faz o checkout do código, realiza login no Docker Hub, constrói e envia a imagem Docker do projeto para o Docker Hub e, em seguida, faz o deploy dessa imagem no Azure App Service, garantindo que a versão mais recente esteja em produção.
+
+Tecnologias utilizadas:
+-HTML
+-Bootstrap
+-CSS
+-Azure
+-Docker
+-SonarQube
+-GitHub
