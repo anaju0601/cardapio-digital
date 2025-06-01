@@ -1,4 +1,3 @@
-/* Reset básico */
 * {
   margin: 0;
   padding: 0;
@@ -17,12 +16,11 @@ body {
   padding: 0px 0;
 }
 
-/* Estilo do cabeçalho */
 .hero {
   background: linear-gradient(135deg, #462202, #1d1305);
   color: white;
   text-align: center;
-  padding: 20px 15px 40px 15px; /* topo, direita, baixo, esquerda */
+  padding: 20px 15px 40px 15px; 
   border-radius: 10px;
   animation: fadeIn 1s ease-in-out;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
@@ -45,7 +43,6 @@ body {
   line-height: 1.5;
 }
 
-/* Estilo dos itens */
 .item {
   background-color: #fff3e0;
   border-radius: 20px;
@@ -107,8 +104,6 @@ body {
   }
 }
 
-
-/* Rodapé */
 footer {
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
@@ -124,7 +119,6 @@ footer {
   border-radius: 10px;
 }
 
-/* Animações */
 @keyframes fadeIn {
   from {
     opacity: 0;
