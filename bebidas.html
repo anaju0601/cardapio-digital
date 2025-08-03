@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bebidas - Pastelaria Sabor Brasil</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bebidas - Pastelaria Sabor Brasil</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  
+  <style>
+    body.fade-out {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+  </style>
 </head>
 <body style="background-image: url('imgs/restaurante.jpg'); background-size: cover; background-repeat: no-repeat; background-position: center;">
 
@@ -15,10 +23,15 @@
   </header>
 
   <main class="container my-5">
+
+    <div class="text-center mb-4">
+      <a href="index.html" class="btn btn-primary">← Voltar para a página principal</a>
+    </div>
+
     <div class="row justify-content-center gy-5">
       <div class="col-md-4">
         <section class="item">
-          <img src="imgs/refrige.jpg" alt="Refrigerante" class="img-fluid rounded">
+          <img src="imgs/refrige.jpg" alt="Refrigerante" class="img-fluid rounded" />
           <h2>Refrigerante</h2>
           <p>Coca-cola, Fanta Laranja, Pepsi, Guaraná e Sprite.</p>
           <p class="preco">R$ 8,00</p>
@@ -27,7 +40,7 @@
 
       <div class="col-md-4">
         <section class="item">
-          <img src="imgs/sucos.jpg" alt="Suco Natural" class="img-fluid rounded">
+          <img src="imgs/sucos.jpg" alt="Suco Natural" class="img-fluid rounded" />
           <h2>Suco Natural</h2>
           <p>Laranja, Abacaxi, Uva, Maracujá e Goiaba.</p>
           <p class="preco">R$ 12,00</p>
@@ -36,7 +49,7 @@
 
       <div class="col-md-4">
         <section class="item">
-          <img src="imgs/agua.jpg" alt="Água Mineral" class="img-fluid rounded">
+          <img src="imgs/agua.jpg" alt="Água Mineral" class="img-fluid rounded" />
           <h2>Água Mineral</h2>
           <p>Água mineral com ou sem gás.</p>
           <p class="preco">R$ 5,00</p>
@@ -46,24 +59,24 @@
   </main>
 
   <footer class="text-white text-center py-4">
-    ©  2025 Pastelaria Sabor Brasil. Todos os direitos reservados.
+    © 2025 Pastelaria Sabor Brasil. Todos os direitos reservados.
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
-  document.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', function (e) {
-      const target = this.getAttribute('href');
-
-      if (target && !target.startsWith('#') && !target.startsWith('javascript')) {
-        e.preventDefault();
-        document.body.classList.add('fade-out');
-        setTimeout(() => {
-          window.location.href = target;
-        }, 400); 
-      }
+    document.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', function (e) {
+        const target = this.getAttribute('href');
+        if (target && !target.startsWith('#') && !target.startsWith('javascript')) {
+          e.preventDefault();
+          document.body.classList.add('fade-out');
+          setTimeout(() => {
+            window.location.href = target;
+          }, 400);
+        }
+      });
     });
-  });
-</script>
-
+  </script>
 </body>
 </html>
