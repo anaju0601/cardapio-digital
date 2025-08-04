@@ -140,3 +140,27 @@ footer {
     transform: translateY(0);
   }
 }
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 1.5rem 1rem 3rem;
+    }
+    .hero h1 {
+        font-size: 2.2rem !important; /* Reduzindo o tamanho da fonte */
+    }
+    .hero p {
+        font-size: 1rem; /* Reduzindo o tamanho da fonte */
+    }
+    .item {
+        margin-top: 15px; /* Reduzindo o espaçamento entre os itens */
+    }
+    .item h2 {
+        font-size: 1.3rem; /* Reduzindo o tamanho da fonte */
+    }
+    .item p, .item .preco {
+        font-size: 1rem; /* Reduzindo o tamanho da fonte */
+    }
+    .item img {
+        height: auto; /* Mantendo a altura automática para não distorcer */
+    }
+}
