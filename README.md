@@ -1,30 +1,191 @@
-🥟 Cardápio Digital - Pastelaria Facul Digital
+# Cardápio Digital - API REST com TypeScript
 
-📄 Descrição do Projeto
-Este é um projeto de um site de cardápio digital desenvolvido para a Pastelaria Facul Digital. O objetivo é substituir cardápios físicos por uma alternativa moderna, acessível e prática, permitindo que os clientes acessem o cardápio pelo celular ou qualquer dispositivo com internet. O site apresenta os sabores, descrições e preços dos nossos produtos de forma clara e visualmente agradável.
+Sistema completo de gerenciamento de cardápio digital com backend API REST, frontend Next.js, autenticação JWT, documentação Swagger e deploy automatizado.
 
-🎯 Objetivo do Site
-O principal objetivo do site é melhorar a experiência do cliente, facilitando o acesso ao cardápio da nossa pastelaria. Com um layout simples e responsivo, buscamos tornar a escolha dos pastéis mais fácil e rápida, além de modernizar a forma como apresentamos nossos produtos ao público.
+## Tecnologias Utilizadas
 
-🌐 URL de Acesso
-Você pode acessar o site publicado em produção através do link:
+### Backend
+- TypeScript
+- Node.js + Express
+- TypeORM
+- PostgreSQL
+- JWT (autenticação)
+- Swagger (documentação)
+- Bcrypt (hash de senhas)
 
-👉 https://pastelaria-facul-digital.azurewebsites.net/
+### Frontend
+- Next.js 15
+- React 19
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
 
-⚙️ Descrição dos Pipelines (CI/CD)
-Este projeto conta com duas configurações de automação via GitHub Actions:
+### DevOps
+- Docker + Docker Compose
+- GitHub Actions (CI/CD)
+- PostgreSQL em container
 
-Pipeline de Integração Contínua (CI):
-A primeira configuração define uma pipeline de integração contínua (CI) que é executada sempre que há um push na branch main. Ela faz o checkout do repositório, configura o Node.js na versão 20, instala as dependências e o Cypress, inicia um servidor local, executa os testes com Cypress e realiza uma análise de código com o SonarQube. No final, utiliza a imagem Docker publicada para fazer o deploy da aplicação no Azure.
+## Requisitos
 
-Pipeline de Entrega Contínua (CD):
-A segunda configuração define uma pipeline de entrega contínua (CD), também acionada por push na branch main. Ela faz o checkout do código, realiza login no Docker Hub, constrói e envia a imagem Docker do projeto para o Docker Hub e, em seguida, faz o deploy dessa imagem no Azure App Service, garantindo que a versão mais recente esteja em produção.
+- Node.js 20+
+- Docker e Docker Compose
+- PostgreSQL (se rodar sem Docker)
 
-Tecnologias utilizadas:
--HTML
--Bootstrap
--CSS
--Azure
--Docker
--SonarQube
--GitHub
+## Instalação e Execução
+
+### Com Docker (Recomendado)
+
+\`\`\`bash
+# Desenvolvimento
+make dev
+
+# Produção
+make prod
+
+# Ver logs
+make logs
+
+# Parar containers
+make down
+\`\`\`
+
+### Sem Docker
+
+#### Backend
+
+\`\`\`bash
+cd backend
+npm install
+cp .env.example .env
+# Configure as variáveis de ambiente
+npm run dev
+\`\`\`
+
+#### Frontend
+
+\`\`\`bash
+cd frontend
+npm install
+cp .env.local.example .env.local
+# Configure NEXT_PUBLIC_API_URL
+npm run dev
+\`\`\`
+
+## Estrutura do Projeto
+
+\`\`\`
+.
+├── backend/                 # API REST
+│   ├── src/
+│   │   ├── config/         # Configurações (DB, Swagger)
+│   │   ├── controllers/    # Controllers
+│   │   ├── entities/       # Entidades TypeORM
+│   │   ├── middleware/     # Middlewares (auth, error)
+│   │   ├── routes/         # Rotas da API
+│   │   └── server.ts       # Servidor Express
+│   ├── Dockerfile
+│   └── package.json
+│
+├── frontend/               # Next.js App
+│   ├── app/               # Pages (App Router)
+│   ├── components/        # Componentes React
+│   ├── lib/              # Utilitários (API client)
+│   ├── Dockerfile
+│   └── package.json
+│
+├── .github/
+│   └── workflows/         # GitHub Actions
+│       ├── ci.yml        # Integração Contínua
+│       ├── cd.yml        # Entrega Contínua
+│       └── test.yml      # Testes
+│
+├── docker-compose.yml     # Produção
+├── docker-compose.dev.yml # Desenvolvimento
+└── Makefile              # Comandos úteis
+\`\`\`
+
+## Endpoints da API
+
+### Autenticação
+
+- `POST /api/auth/register` - Registrar usuário
+- `POST /api/auth/login` - Login
+- `GET /api/auth/profile` - Perfil (requer token)
+
+### Produtos
+
+- `GET /api/products` - Listar produtos
+- `GET /api/products/:id` - Buscar produto
+- `POST /api/products` - Criar produto
+- `PUT /api/products/:id` - Atualizar produto
+- `DELETE /api/products/:id` - Deletar produto
+
+### Categorias
+
+- `GET /api/categories` - Listar categorias
+- `GET /api/categories/:id` - Buscar categoria
+- `POST /api/categories` - Criar categoria
+- `PUT /api/categories/:id` - Atualizar categoria
+- `DELETE /api/categories/:id` - Deletar categoria
+
+## Documentação
+
+- **Swagger UI:** http://localhost:3001/api-docs
+- **Health Check:** http://localhost:3001/health
+
+## Autenticação
+
+Todas as rotas (exceto registro e login) requerem autenticação JWT.
+
+\`\`\`bash
+# Exemplo de requisição autenticada
+curl -H "Authorization: Bearer SEU_TOKEN" http://localhost:3001/api/products
+\`\`\`
+
+## CI/CD
+
+O projeto utiliza GitHub Actions para:
+
+- Testes automatizados
+- Build de imagens Docker
+- Deploy automático
+- Publicação no Docker Hub
+
+Veja [CI_CD.md](CI_CD.md) para mais detalhes.
+
+## Variáveis de Ambiente
+
+### Backend (.env)
+
+\`\`\`env
+PORT=3001
+NODE_ENV=development
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=cardapio_db
+JWT_SECRET=your-secret-key
+\`\`\`
+
+### Frontend (.env.local)
+
+\`\`\`env
+NEXT_PUBLIC_API_URL=http://localhost:3001
+\`\`\`
+
+## Contribuindo
+
+1. Fork o projeto
+2. Crie uma branch (`git checkout -b feature/nova-feature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
+4. Push para a branch (`git push origin feature/nova-feature`)
+5. Abra um Pull Request
+
+## Licença
+
+MIT
+
+## Autores
+
+Projeto desenvolvido para trabalho acadêmico sobre APIs REST com TypeScript.

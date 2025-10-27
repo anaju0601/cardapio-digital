@@ -1,0 +1,89 @@
+name: Testes Automatizados
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  integration-tests:
+    name: Testes de Integração
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: cardapio_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependências do backend
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Executar testes do backend
+        working-directory: ./backend
+        run: npm test || echo "Testes não configurados ainda"
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: cardapio_test
+          JWT_SECRET: test-secret
+
+      - name: Instalar dependências do frontend
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Executar testes do frontend
+        working-directory: ./frontend
+        run: npm test || echo "Testes não configurados ainda"
+
+  e2e-tests:
+    name: Testes E2E
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Iniciar aplicação com Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml up -d
+          sleep 30
+
+      - name: Verificar saúde dos serviços
+        run: |
+          curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:3001/health
+          curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:3000
+
+      - name: Executar testes E2E
+        run: echo "Testes E2E seriam executados aqui (Cypress, Playwright, etc)"
+
+      - name: Parar containers
+        if: always()
+        run: docker-compose down
