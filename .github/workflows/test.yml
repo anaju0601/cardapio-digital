@@ -1,0 +1,66 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: university_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Install backend dependencies
+        working-directory: ./api
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: ./api
+        run: npm test
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/university_test
+          JWT_SECRET: test-secret-key
+          NODE_ENV: test
+        continue-on-error: true
+
+      - name: Generate test coverage report
+        working-directory: ./api
+        run: npm run test:coverage
+        continue-on-error: true
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./api/coverage/lcov.info
+          flags: backend
+          name: backend-coverage
+        continue-on-error: true

@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  api:
+    image: ${DOCKER_USERNAME}/university-api:latest
+    container_name: university-api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - db
+    networks:
+      - university-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: university-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - university-network
+
+volumes:
+  postgres-data:
+
+networks:
+  university-network:
+    driver: bridge
