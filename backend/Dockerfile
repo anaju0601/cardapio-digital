@@ -1,18 +1,18 @@
-FROM node:20-alpine AS base
+# Imagem base
+FROM node:20-alpine
 
+# Instala o pnpm globalmente
+RUN npm install -g pnpm
+
+# Define o diretório de trabalho
 WORKDIR /app
 
-COPY package*.json ./
+# Copia SÓ os arquivos de dependência
+COPY package.json pnpm-lock.yaml ./
 
-FROM base AS development
-RUN npm install
-COPY . .
-EXPOSE 3001
-CMD ["npm", "run", "dev"]
+# Instala as dependências (ESTE É O PASSO QUE FALTAVA)
+# Isso vai instalar o ts-node-dev e tudo mais
+RUN pnpm install
 
-FROM base AS production
-RUN npm ci --only=production
-COPY . .
-RUN npm run build
-EXPOSE 3001
-CMD ["npm", "start"]
+# O docker-compose vai rodar o comando, mas é bom ter um padrão
+CMD ["pnpm", "run", "dev"]

@@ -1,36 +1,17 @@
-FROM node:20-alpine AS deps
+# Imagem base
+FROM node:20-alpine
+
+# Instala o pnpm globalmente
+RUN npm install -g pnpm
+
+# Define o diretório de trabalho
 WORKDIR /app
 
-COPY package.json ./
-RUN npm install --legacy-peer-deps --no-package-lock
+# Copia SÓ os arquivos de dependência (da raiz)
+COPY package.json pnpm-lock.yaml ./
 
-FROM node:20-alpine AS builder
-WORKDIR /app
+# Instala as dependências
+RUN pnpm install
 
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
-
-FROM node:20-alpine AS runner
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
-
-EXPOSE 3000
-
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
-CMD ["node", "server.js"]
+# O docker-compose vai rodar o comando, mas é bom ter um padrão
+CMD ["pnpm", "run", "dev"]
