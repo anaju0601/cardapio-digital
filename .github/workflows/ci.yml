@@ -68,6 +68,3 @@ jobs:
       - name: Lint frontend
         working-directory: ./frontend
         run: pnpm run lint || echo "Lint não configurado"
-
-      - name: Build das imagens Docker (modo dev)
-        run: docker compose -f docker-compose.dev.yml build

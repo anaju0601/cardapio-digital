@@ -1,17 +1,42 @@
-# Imagem base
-FROM node:20-alpine
-
-# Instala o pnpm globalmente
-RUN npm install -g pnpm
-
-# Define o diretório de trabalho
+# --- ESTÁGIO 1: Dependências ---
+FROM node:20-alpine AS deps
 WORKDIR /app
-
-# Copia SÓ os arquivos de dependência (da raiz)
+# Instala pnpm
+RUN npm install -g pnpm
 COPY package.json pnpm-lock.yaml ./
+# Instala dependências de produção
+RUN pnpm install --prod
 
-# Instala as dependências
-RUN pnpm install
+# --- ESTÁGIO 2: Builder ---
+FROM node:20-alpine AS builder
+WORKDIR /app
+# Instala pnpm
+RUN npm install -g pnpm
+# Copia dependências do estágio anterior
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1
+# Roda o build com pnpm
+RUN pnpm run build
 
-# O docker-compose vai rodar o comando, mas é bom ter um padrão
-CMD ["pnpm", "run", "dev"]
+# --- ESTÁGIO 3: Runner (Produção) ---
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+# Copia os arquivos da build otimizada
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Roda o servidor Next.js standalone
+CMD ["node", "server.js"]

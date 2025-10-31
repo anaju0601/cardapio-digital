@@ -24,6 +24,10 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    # --- ADICIONE ISTO ---
+    # O nome da imagem no Docker Hub
+    image: anaju0601/manuseamento-sistema-universidade-backend 
+    # --------------------
     container_name: cardapio-backend
     environment:
       NODE_ENV: production
@@ -45,8 +49,14 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      # --- CORRIJA ISTO ---
+      context: . # A pasta raiz
+      dockerfile: Dockerfile.frontend # O arquivo do frontend
+      # --------------------
+    # --- ADICIONE ISTO ---
+    # O nome da imagem no Docker Hub
+    image: anaju0601/manuseamento-sistema-universidade-frontend
+    # --------------------
     container_name: cardapio-frontend
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:3001
