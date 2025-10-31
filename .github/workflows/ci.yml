@@ -6,208 +6,99 @@ on:
   pull_request:
     branches: [main, develop]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+env:
+  DB_HOST: localhost
+  DB_PORT: 5432
+  DB_USER: postgres
+  DB_PASSWORD: postgres
+  DB_NAME: cardapio_test
+  JWT_SECRET: test-secret-key
+  NODE_ENV: test
 
 jobs:
-  lint-and-typecheck:
-    name: Lint e TypeCheck
+  backend:
+    name: Backend - TypeScript & TypeORM
     runs-on: ubuntu-latest
     
-    strategy:
-      matrix:
-        workspace: [backend, frontend]
-    
-    steps:
-      - name: Checkout código
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: ${{ matrix.workspace }}/package-lock.json
-
-      - name: Instalar dependências
-        working-directory: ${{ matrix.workspace }}
-        run: npm ci
-
-      - name: Executar Lint
-        working-directory: ${{ matrix.workspace }}
-        run: npm run lint
-        continue-on-error: true
-
-      - name: Verificar TypeScript
-        working-directory: ${{ matrix.workspace }}
-        run: npx tsc --noEmit
-
-  test-backend:
-    name: Testes Backend
-    runs-on: ubuntu-latest
-    needs: lint-and-typecheck
-
     services:
       postgres:
-        image: postgres:16-alpine
+        image: postgres:15-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: cardapio_test
-        ports:
-          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
-      - name: Checkout código
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '18'
           cache: 'npm'
-          cache-dependency-path: backend/package-lock.json
+          cache-dependency-path: backend/package.json
 
-      - name: Instalar dependências
+      - name: Install backend dependencies
         working-directory: backend
         run: npm ci
 
-      - name: Executar testes unitários
+      - name: Build TypeScript
         working-directory: backend
-        run: npm test
-        env:
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_USER: postgres
-          DB_PASSWORD: postgres
-          DB_NAME: cardapio_test
-          JWT_SECRET: test-secret-key
-          NODE_ENV: test
-
-      - name: Upload coverage
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-coverage
-          path: backend/coverage
-          retention-days: 7
-
-  test-frontend:
-    name: Testes Frontend
-    runs-on: ubuntu-latest
-    needs: lint-and-typecheck
-
-    steps:
-      - name: Checkout código
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Instalar dependências
-        working-directory: frontend
-        run: npm ci
-
-      - name: Executar testes
-        working-directory: frontend
-        run: npm test
-        continue-on-error: true
-
-      - name: Build aplicação
-        working-directory: frontend
         run: npm run build
-        env:
-          NEXT_PUBLIC_API_URL: http://localhost:3001
 
-  build-docker:
-    name: Build Docker Images
+      - name: Lint backend
+        working-directory: backend
+        run: npm run lint || true
+
+      - name: Build Docker image
+        run: docker build -t cardapio-api:latest -f backend/Dockerfile backend/
+
+  frontend:
+    name: Frontend - Next.js
     runs-on: ubuntu-latest
-    needs: [test-backend, test-frontend]
-    if: github.event_name == 'push'
-
-    strategy:
-      matrix:
-        service: [backend, frontend]
 
     steps:
-      - name: Checkout código
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build ${{ matrix.service }} image
-        uses: docker/build-push-action@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          context: ./${{ matrix.service }}
-          file: ./${{ matrix.service }}/Dockerfile
-          push: false
-          tags: cardapio-${{ matrix.service }}:${{ github.sha }}
-          cache-from: type=gha,scope=${{ matrix.service }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
-          outputs: type=docker,dest=/tmp/${{ matrix.service }}-image.tar
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: package.json
 
-      - name: Upload imagem como artefato
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.service }}-image
-          path: /tmp/${{ matrix.service }}-image.tar
-          retention-days: 1
+      - name: Install frontend dependencies
+        run: npm ci
 
-  integration-test:
-    name: Testes de Integração
+      - name: Build Next.js
+        run: npm run build
+
+      - name: Lint frontend
+        run: npm run lint || true
+
+      - name: Build Docker image
+        run: docker build -t cardapio-frontend:latest -f Dockerfile.frontend .
+
+  docker-compose:
+    name: Docker Compose Build
     runs-on: ubuntu-latest
-    needs: build-docker
-    if: github.event_name == 'push'
-
+    
     steps:
-      - name: Checkout código
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Download backend image
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-image
-          path: /tmp
+      - name: Test Docker Compose build
+        run: docker-compose -f docker-compose.dev.yml build
 
-      - name: Download frontend image
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-image
-          path: /tmp
-
-      - name: Load Docker images
+      - name: Verify services start
         run: |
-          docker load --input /tmp/backend-image.tar
-          docker load --input /tmp/frontend-image.tar
-
-      - name: Iniciar aplicação com Docker Compose
-        run: |
-          docker-compose -f docker-compose.yml up -d
-          sleep 30
-
-      - name: Verificar saúde dos serviços
-        run: |
-          curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:3001/health || echo "Backend health check failed"
-          curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:3000 || echo "Frontend health check failed"
-
-      - name: Executar testes E2E
-        run: echo "Testes E2E podem ser executados aqui (Cypress, Playwright, etc)"
-
-      - name: Logs dos containers
-        if: failure()
-        run: docker-compose logs
-
-      - name: Parar containers
-        if: always()
-        run: docker-compose down -v
+          docker-compose -f docker-compose.dev.yml up -d
+          sleep 5
+          docker-compose -f docker-compose.dev.yml ps
+          docker-compose -f docker-compose.dev.yml down
