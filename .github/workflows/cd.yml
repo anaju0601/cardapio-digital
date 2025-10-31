@@ -25,8 +25,8 @@ jobs:
 
       - name: Build e push das imagens
         run: |
-          docker-compose -f docker-compose.yml build
-          docker-compose -f docker-compose.yml push
+          docker compose -f docker-compose.yml build
+          docker compose -f docker-compose.yml push
 
       - name: Deploy finalizado
         run: echo "✅ Imagens enviadas com sucesso para o Docker Hub!"
