@@ -1,11 +1,17 @@
 # --- ESTÁGIO 1: Dependências ---
 FROM node:20-alpine AS deps
 WORKDIR /app
+<<<<<<< HEAD
 # Instala pnpm
 RUN npm install -g pnpm
 COPY package.json pnpm-lock.yaml ./
 # Instala dependências de produção
 RUN pnpm install --prod
+=======
+
+# Copia SÓ os arquivos de dependência (da raiz)
+COPY package.json
+>>>>>>> 3ecd123778459b1a1d5fad0c48814c92e533c320
 
 # --- ESTÁGIO 2: Builder ---
 FROM node:20-alpine AS builder
