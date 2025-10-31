@@ -41,11 +41,12 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
-            docker pull cardapio-backend:latest || true
-            docker pull cardapio-frontend:latest || true
+            # Para e remove containers antigos
             docker stop cardapio-backend || true
             docker stop cardapio-frontend || true
             docker rm cardapio-backend || true
             docker rm cardapio-frontend || true
+
+            # Inicia novos containers
             docker run -d --name cardapio-backend cardapio-backend:latest
-            docker run -d --name cardapio-frontend -p 3000:3000 cardapio-frontend:latest
+            docker run -d --name cardapio-frontend -p 3000:3000 cardapio-frontend:latest --restart unless-stopped
