@@ -103,7 +103,7 @@ jobs:
 
       - name: Iniciar aplicação com Docker Compose
         run: |
-          docker-compose -f docker-compose.yml up -d --build
+          docker compose -f docker-compose.yml up -d --build
           echo "⏳ Aguardando serviços subirem..."
           sleep 25
 
@@ -119,4 +119,4 @@ jobs:
 
       - name: Parar containers
         if: always()
-        run: docker-compose down
+        run: docker compose down

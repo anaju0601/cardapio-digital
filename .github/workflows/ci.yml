@@ -70,4 +70,4 @@ jobs:
         run: pnpm run lint || echo "Lint não configurado"
 
       - name: Build das imagens Docker (modo dev)
-        run: docker-compose -f docker-compose.dev.yml build
+        run: docker compose -f docker-compose.dev.yml build
