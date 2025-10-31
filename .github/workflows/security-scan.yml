@@ -1,0 +1,63 @@
+name: Security Scan
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Toda segunda-feira à meia-noite
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  dependency-scan:
+    name: Scan de Dependências
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        workspace: [backend, frontend]
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Audit de dependências
+        working-directory: ${{ matrix.workspace }}
+        run: |
+          npm audit --audit-level=moderate || true
+          npm audit --json > audit-${{ matrix.workspace }}.json || true
+
+      - name: Upload relatório de audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-${{ matrix.workspace }}
+          path: ${{ matrix.workspace }}/audit-${{ matrix.workspace }}.json
+          retention-days: 30
+
+  code-scan:
+    name: Análise de Código
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
