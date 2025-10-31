@@ -31,7 +31,7 @@ jobs:
           cache-from: type=gha,scope=backend
           cache-to: type=gha,mode=max,scope=backend
 
-      - name: Build Frontend Image
+      - name: Build Frontend Image (npm)
         uses: docker/build-push-action@v5
         with:
           context: ./frontend

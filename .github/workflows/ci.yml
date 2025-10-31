@@ -61,11 +61,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm' # cache baseado em package.json, sem travar
+          cache: 'npm'  # sem cache-dependency-path, porque não há package-lock.json
 
       - name: Instalar dependências Frontend
         working-directory: frontend
-        run: npm ci
+        run: npm install
 
       - name: Build Frontend
         working-directory: frontend
