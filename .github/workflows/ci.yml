@@ -38,15 +38,15 @@ jobs:
           cache-dependency-path: backend/package-lock.json
 
       - name: Instalar dependências
-        working-directory: ./backend
+        working-directory: backend
         run: npm ci
 
       - name: Verificar TypeScript
-        working-directory: ./backend
+        working-directory: backend
         run: npx tsc --noEmit
 
       - name: Lint
-        working-directory: ./backend
+        working-directory: backend
         run: npm run lint || echo "Lint não configurado"
 
   test-frontend:
@@ -65,17 +65,17 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
 
       - name: Instalar dependências
-        working-directory: ./frontend
+        working-directory: frontend
         run: npm ci
 
       - name: Build Frontend
-        working-directory: ./frontend
+        working-directory: frontend
         run: npm run build
         env:
           NEXT_PUBLIC_API_URL: http://localhost:3001
 
       - name: Lint
-        working-directory: ./frontend
+        working-directory: frontend
         run: npm run lint || echo "Lint não configurado"
 
   build-docker:

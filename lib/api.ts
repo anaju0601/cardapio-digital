@@ -120,6 +120,18 @@ class ApiClient {
     return response.json()
   }
 
+  async deleteCategory(id: string): Promise<void> {
+    const response = await fetch(`${API_URL}/api/categories/${id}`, {
+      method: "DELETE",
+      headers: this.getHeaders(),
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.message || "Erro ao deletar categoria")
+    }
+  }
+
   async getProducts(): Promise<Product[]> {
     const response = await fetch(`${API_URL}/api/products`, {
       headers: this.getHeaders(),

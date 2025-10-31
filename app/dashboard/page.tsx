@@ -7,6 +7,7 @@ import { api, type Product, type Category, type User } from "@/lib/api"
 import { ProductList } from "@/components/product-list"
 import { CategoryList } from "@/components/category-list"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -58,16 +59,22 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-background">
+      <header className="bg-card border-b">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-orange-600">Cardápio Digital</h1>
-            <p className="text-sm text-gray-600">Bem-vindo, {user?.name}</p>
+            <h1 className="text-2xl font-bold text-orange-600 dark:text-orange-500">Cardápio Digital</h1>
+            <p className="text-sm text-muted-foreground">Bem-vindo, {user?.name}</p>
           </div>
-          <Button variant="outline" onClick={handleLogout}>
-            Sair
-          </Button>
+          <div className="flex gap-2">
+            <ThemeToggle />
+            <Button variant="secondary" onClick={() => router.push("/menu")}>
+              Ver Cardápio
+            </Button>
+            <Button variant="outline" onClick={handleLogout}>
+              Sair
+            </Button>
+          </div>
         </div>
       </header>
 

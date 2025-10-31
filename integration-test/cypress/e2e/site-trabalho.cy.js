@@ -4,4 +4,3 @@ describe('Site Trabalho', () => {
     cy.contains('Pastelaria Sabor Brasil')
   })
 })
-
