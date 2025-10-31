@@ -8,7 +8,7 @@ RUN npm install -g pnpm
 WORKDIR /app
 
 # Copia SÓ os arquivos de dependência (da raiz)
-COPY package.json ./
+COPY package.json
 
 # Instala as dependências
 RUN pnpm install

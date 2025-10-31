@@ -12,26 +12,48 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
+      # Configura ambiente Docker moderno (necessário para docker compose v2)
       - name: Setup Docker QEMU
         uses: docker/setup-qemu-action@v3
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Login seguro no Docker Hub usando secrets
       - name: Login no Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build e push das imagens
+      # Build e push das imagens de backend e frontend
+      - name: Build e Push das Imagens Docker
         run: |
           echo "🏗️ Iniciando build e push das imagens Docker..."
-          docker compose -f docker-compose.yml build
-          docker compose -f docker-compose.yml push
-          echo "🚀 Imagens enviadas com sucesso!"
+
+          # Define escopos para as imagens (usando seu usuário do Docker Hub)
+          BACKEND_IMAGE=anaju06/cardapio-backend
+          FRONTEND_IMAGE=anaju06/cardapio-frontend
+
+          # Gera tag única com base no commit atual
+          TAG=${{ github.sha }}
+
+          echo "🧩 Backend: $BACKEND_IMAGE:$TAG"
+          echo "🧩 Frontend: $FRONTEND_IMAGE:$TAG"
+
+          # Build das imagens com tags específicas e 'latest'
+          docker build -t $BACKEND_IMAGE:$TAG -t $BACKEND_IMAGE:latest ./backend
+          docker build -t $FRONTEND_IMAGE:$TAG -t $FRONTEND_IMAGE:latest ./frontend
+
+          # Push das imagens para o Docker Hub
+          docker push $BACKEND_IMAGE:$TAG
+          docker push $BACKEND_IMAGE:latest
+          docker push $FRONTEND_IMAGE:$TAG
+          docker push $FRONTEND_IMAGE:latest
+
+          echo "🚀 Imagens enviadas com sucesso para o Docker Hub!"
         env:
           DOCKER_BUILDKIT: 1
 
       - name: Deploy finalizado
-        run: echo "Pipeline CD concluído com sucesso!"
+        run: echo "✅ Pipeline CD concluído com sucesso!"
