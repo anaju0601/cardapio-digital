@@ -58,13 +58,13 @@ jobs:
         run: pnpm run lint || echo "Lint não configurado"
 
       - name: Instalar dependências do frontend
-        working-directory: ./frontend
+        # working-directory: ./frontend  <-- REMOVIDO
         run: pnpm install
 
       - name: Build frontend
-        working-directory: ./frontend
+        # working-directory: ./frontend  <-- REMOVIDO
         run: pnpm run build
 
       - name: Lint frontend
-        working-directory: ./frontend
+        # working-directory: ./frontend  <-- REMOVIDO
         run: pnpm run lint || echo "Lint não configurado"
