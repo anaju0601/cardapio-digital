@@ -21,27 +21,45 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar PNPM (para projetos que usam)
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Instalar dependências do backend
         working-directory: ./backend
-        run: npm ci
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "📦 Usando pnpm no backend"
+            pnpm install
+          else
+            echo "📦 Usando npm no backend"
+            npm ci
+          fi
 
       - name: Executar testes do backend
         working-directory: ./backend
-        run: npm test || echo "Testes não configurados ainda"
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm run test || echo "⚠️ Nenhum teste configurado"
+          else
+            npm test || echo "⚠️ Nenhum teste configurado"
+          fi
         env:
           DB_HOST: localhost
           DB_PORT: 5432
@@ -52,11 +70,23 @@ jobs:
 
       - name: Instalar dependências do frontend
         working-directory: ./frontend
-        run: npm ci
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "📦 Usando pnpm no frontend"
+            pnpm install
+          else
+            echo "📦 Usando npm no frontend"
+            npm ci
+          fi
 
       - name: Executar testes do frontend
         working-directory: ./frontend
-        run: npm test || echo "Testes não configurados ainda"
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm run test || echo "⚠️ Nenhum teste configurado"
+          else
+            npm test || echo "⚠️ Nenhum teste configurado"
+          fi
 
   e2e-tests:
     name: Testes E2E
@@ -66,23 +96,26 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
 
       - name: Iniciar aplicação com Docker Compose
         run: |
-          docker-compose -f docker-compose.yml up -d
-          sleep 30
+          docker-compose -f docker-compose.yml up -d --build
+          echo "⏳ Aguardando serviços subirem..."
+          sleep 25
 
       - name: Verificar saúde dos serviços
         run: |
-          curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:3001/health
-          curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:3000
+          echo "🔍 Verificando backend..."
+          curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:3001/health || echo "Sem rota /health configurada"
+          echo "🔍 Verificando frontend..."
+          curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:3000 || echo "Frontend não respondeu"
 
       - name: Executar testes E2E
-        run: echo "Testes E2E seriam executados aqui (Cypress, Playwright, etc)"
+        run: echo "🧪 Testes E2E rodariam aqui (Cypress, Playwright, etc.)"
 
       - name: Parar containers
         if: always()

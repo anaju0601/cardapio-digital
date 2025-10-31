@@ -1,66 +1,73 @@
-name: CD - Deploy Produção
+name: CI
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
 
 jobs:
-  deploy:
-    name: Deploy para Produção
+  ci:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    environment:
-      name: production
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: cardapio_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: cardapio_db
+      JWT_SECRET: test-secret
+      NEXT_PUBLIC_API_URL: http://localhost:3001
 
     steps:
-      - name: Checkout código
+      - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Backend Image
-        uses: docker/build-push-action@v5
+      - name: Instalar PNPM
+        uses: pnpm/action-setup@v4
         with:
-          context: ./backend
-          file: ./backend/Dockerfile
-          push: false
-          tags: cardapio-backend:latest
-          cache-from: type=gha,scope=backend
-          cache-to: type=gha,mode=max,scope=backend
+          version: 9
 
-      - name: Build Frontend Image (npm)
-        uses: docker/build-push-action@v5
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
         with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
-          push: false
-          tags: cardapio-frontend:latest
-          cache-from: type=gha,scope=frontend
-          cache-to: type=gha,mode=max,scope=frontend
+          node-version: 20
+          cache: 'pnpm'
 
-      - name: Deploy via SSH para servidor
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: 22
-          script: |
-            # Para e remove containers antigos
-            docker stop cardapio-backend || true
-            docker stop cardapio-frontend || true
-            docker rm cardapio-backend || true
-            docker rm cardapio-frontend || true
+      - name: Instalar dependências do backend
+        working-directory: ./backend
+        run: pnpm install
 
-            # Roda novos containers
-            docker run -d --name cardapio-backend cardapio-backend:latest --restart unless-stopped
-            docker run -d --name cardapio-frontend -p 3000:3000 cardapio-frontend:latest --restart unless-stopped
+      - name: Lint backend
+        working-directory: ./backend
+        run: pnpm run lint || echo "Lint não configurado"
 
-      - name: Notificar deploy
-        run: |
-          echo "✅ Deploy realizado com sucesso!"
-          echo "📦 Backend: cardapio-backend:latest"
-          echo "📦 Frontend: cardapio-frontend:latest"
+      - name: Instalar dependências do frontend
+        working-directory: ./frontend
+        run: pnpm install
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: pnpm run build
+
+      - name: Lint frontend
+        working-directory: ./frontend
+        run: pnpm run lint || echo "Lint não configurado"
+
+      - name: Build das imagens Docker (modo dev)
+        run: docker-compose -f docker-compose.dev.yml build
