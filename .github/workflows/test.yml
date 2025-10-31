@@ -1,4 +1,4 @@
-name: Tests - Testes Automatizados
+name: Testes Automatizados
 
 on:
   push:
@@ -6,50 +6,33 @@ on:
   pull_request:
     branches: [main, develop]
 
-env:
-  DB_HOST: localhost
-  DB_PORT: 5432
-  DB_USER: postgres
-  DB_PASSWORD: postgres
-  DB_NAME: cardapio_test
-  JWT_SECRET: test-secret-key
-  NEXT_PUBLIC_API_URL: http://localhost:3001
-  NODE_ENV: test
-
 jobs:
-  e2e:
-    name: E2E Tests - Cypress
+  integration-tests:
+    name: Testes de Integração
     runs-on: ubuntu-latest
 
     services:
       postgres:
-        image: postgres:15-alpine
+        image: postgres:16-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: cardapio_test
+        ports:
+          - 5432:5432
         options: >-
-<<<<<<< HEAD
           --health-cmd="pg_isready -U postgres"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-=======
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
->>>>>>> b3a51faee96eb04a835fb3582515aa626c95d6eb
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout código
+        uses: actions/checkout@v4
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-<<<<<<< HEAD
           node-version: 20
           cache: 'npm'
 
@@ -104,98 +87,28 @@ jobs:
           else
             npm test || echo "⚠️ Nenhum teste configurado"
           fi
-=======
-          node-version: '18'
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install backend dependencies
-        working-directory: backend
-        run: npm ci
-
-      - name: Build backend
-        working-directory: backend
-        run: npm run build
->>>>>>> b3a51faee96eb04a835fb3582515aa626c95d6eb
-
-      - name: Build frontend
-        run: npm run build
-
-      - name: Install Cypress dependencies
-        working-directory: integration-test
-        run: npm ci
-
-      - name: Run E2E tests
-        working-directory: integration-test
-        run: npm exec cypress run || true
-
-      - name: Upload Cypress reports
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: cypress-reports
-          path: integration-test/cypress/videos
-          retention-days: 7
-
-  health-check:
-    name: Service Health Check
+  e2e-tests:
+    name: Testes E2E
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: cardapio_test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Check PostgreSQL connection
-        run: |
-          apt-get update -qq
-          apt-get install -y postgresql-client
-          PGPASSWORD=${{ env.DB_PASSWORD }} psql -h ${{ env.DB_HOST }} -U ${{ env.DB_USER }} -d ${{ env.DB_NAME }} -c "SELECT 1" || exit 1
-          echo "✅ PostgreSQL is healthy"
+      - name: Checkout código
+        uses: actions/checkout@v4
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-<<<<<<< HEAD
           node-version: 20
-=======
-          node-version: '18'
-          cache: 'npm'
->>>>>>> b3a51faee96eb04a835fb3582515aa626c95d6eb
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Verify build integrity
+      - name: Iniciar aplicação com Docker Compose
         run: |
-<<<<<<< HEAD
           docker-compose -f docker-compose.yml up -d --build
           echo "⏳ Aguardando serviços subirem..."
           sleep 25
-=======
-          npm run build
-          [ -d ".next" ] && echo "✅ Next.js build successful" || exit 1
->>>>>>> b3a51faee96eb04a835fb3582515aa626c95d6eb
 
-      - name: Verify backend build
-        working-directory: backend
+      - name: Verificar saúde dos serviços
         run: |
-<<<<<<< HEAD
           echo "🔍 Verificando backend..."
           curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:3001/health || echo "Sem rota /health configurada"
           echo "🔍 Verificando frontend..."
@@ -207,8 +120,3 @@ jobs:
       - name: Parar containers
         if: always()
         run: docker-compose down
-=======
-          npm ci
-          npm run build
-          [ -d "dist" ] && echo "✅ Backend build successful" || exit 1
->>>>>>> b3a51faee96eb04a835fb3582515aa626c95d6eb
