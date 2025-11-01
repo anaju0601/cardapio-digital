@@ -51,6 +51,7 @@
     "date-fns": "4.1.0",
     "embla-carousel-react": "latest",
     "express": "latest",
+    "framer-motion": "^12.23.24",
     "helmet": "latest",
     "input-otp": "latest",
     "ioredis": "latest",

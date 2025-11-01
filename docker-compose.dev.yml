@@ -38,13 +38,14 @@ services:
       - postgres
     networks:
       - cardapio-network-dev
-    command: pnpm run dev
+    command: npx pnpm run dev
 
   frontend:
     build:
       context: . # Usa a pasta raiz
       dockerfile: Dockerfile.frontend # Usa o arquivo do frontend
     container_name: cardapio-frontend-dev
+    user: root
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:3001
     ports:
@@ -57,7 +58,7 @@ services:
       - backend
     networks:
       - cardapio-network-dev
-    command: pnpm run dev
+    command: npx pnpm run dev
 
 volumes:
   postgres_data_dev:
