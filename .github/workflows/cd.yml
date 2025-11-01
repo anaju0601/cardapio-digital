@@ -32,8 +32,8 @@ jobs:
           echo "🏗️ Iniciando build e push das imagens Docker..."
 
           # Define escopos para as imagens
-          BACKEND_IMAGE=anaju06/cardapio-backend
-          FRONTEND_IMAGE=anaju06/cardapio-frontend
+          BACKEND_IMAGE=raffolas/cardapio-backend
+          FRONTEND_IMAGE=raffolas/cardapio-frontend
 
           # Gera tag única (vamos usar a versão curta do commit)
           TAG=$(echo ${{ github.sha }} | head -c7)
