@@ -1,13 +1,13 @@
-# --- ESTÁGIO 1: Dependências ---
+# --- ESTÁGIO 1: Dependências (Instala TODAS as dependências) ---
 FROM node:20-alpine AS deps
 WORKDIR /app
 # Instala pnpm
 RUN npm install -g pnpm
 COPY package.json pnpm-lock.yaml ./
-# Instala dependências de produção
-RUN pnpm install --prod
+# Instala TODAS as dependências (dev e prod) para o build
+RUN pnpm install
 
-# --- ESTÁGIO 2: Builder ---
+# --- ESTÁGIO 2: Builder (Constrói o app) ---
 FROM node:20-alpine AS builder
 WORKDIR /app
 # Instala pnpm
