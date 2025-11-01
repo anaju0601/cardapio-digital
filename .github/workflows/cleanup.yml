@@ -2,7 +2,7 @@ name: Cleanup
 
 on:
   schedule:
-    - cron: '0 2 * * 0' # Domingo às 2h
+    - cron: '0 2 * * 0'
   workflow_dispatch:
 
 jobs:
