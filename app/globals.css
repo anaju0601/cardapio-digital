@@ -3,31 +3,25 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Updated color scheme with warm amber/orange tones inspired by restaurant aesthetic */
 :root {
-  /* Warm cream background */
   --background: oklch(0.98 0.01 85);
   --foreground: oklch(0.2 0.02 60);
 
-  /* Card with subtle warmth */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.2 0.02 60);
 
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.2 0.02 60);
 
-  /* Warm orange primary */
   --primary: oklch(0.65 0.19 45);
   --primary-foreground: oklch(0.99 0 0);
 
-  /* Warm secondary */
   --secondary: oklch(0.96 0.01 85);
   --secondary-foreground: oklch(0.3 0.02 60);
 
   --muted: oklch(0.96 0.01 85);
   --muted-foreground: oklch(0.5 0.01 60);
 
-  /* Accent amber */
   --accent: oklch(0.95 0.03 75);
   --accent-foreground: oklch(0.3 0.02 60);
 
@@ -56,9 +50,7 @@
   --sidebar-ring: oklch(0.65 0.19 45);
 }
 
-/* Dark mode with rich, warm tones */
 .dark {
-  /* Rich dark background with warmth */
   --background: oklch(0.15 0.01 60);
   --foreground: oklch(0.95 0.01 85);
 
@@ -68,7 +60,6 @@
   --popover: oklch(0.18 0.01 60);
   --popover-foreground: oklch(0.95 0.01 85);
 
-  /* Brighter orange for dark mode */
   --primary: oklch(0.7 0.2 45);
   --primary-foreground: oklch(0.15 0.01 60);
 
@@ -104,7 +95,6 @@
   --sidebar-ring: oklch(0.7 0.2 45);
 }
 
-/* Added elegant serif font for headings */
 @theme inline {
   --font-sans: "Inter", "Geist", "Geist Fallback", system-ui, -apple-system, sans-serif;
   --font-serif: "Playfair Display", "Georgia", serif;
@@ -156,7 +146,6 @@
     @apply bg-background text-foreground;
   }
 
-  /* Added elegant heading styles */
   h1,
   h2,
   h3,

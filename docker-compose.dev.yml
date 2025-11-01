@@ -1,4 +1,3 @@
-# Você pode apagar esta linha 'version' se quiser, como o aviso sugere
 version: '3.8'
 
 services:
@@ -22,18 +21,18 @@ services:
       dockerfile: Dockerfile
     container_name: cardapio-backend-dev
     ports:
-      - "3001:3001" # <-- ESTA É A LINHA QUE FALTAVA
+      - "3001:3001"
     environment:
       NODE_ENV: development
-      DB_HOST: postgres # Conecta ao serviço 'postgres' acima
+      DB_HOST: postgres
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: cardapio_db
       JWT_SECRET: dev-secret-key
     volumes:
-      - ./backend:/app # Espelha seu código do backend
-      - /app/node_modules # Não espelha node_modules
+      - ./backend:/app
+      - /app/node_modules
     depends_on:
       - postgres
     networks:
@@ -42,15 +41,15 @@ services:
 
   frontend:
     build:
-      context: . # Usa a pasta raiz
-      dockerfile: Dockerfile.frontend # Usa o arquivo do frontend
+      context: .
+      dockerfile: Dockerfile.frontend
     container_name: cardapio-frontend-dev
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:3001
     ports:
       - "3000:3000"
     volumes:
-      - .:/app # Espelha seu código da raiz
+      - .:/app 
       - /app/node_modules
       - /app/.next
     depends_on:
