@@ -2,10 +2,8 @@
 const nextConfig = {
   output: 'standalone',
 
+  // O bloco 'eslint' foi removido para corrigir o aviso
 
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
