@@ -2,7 +2,7 @@ name: Security Scan
 
 on:
   schedule:
-    - cron: '0 0 * * 1' # roda toda segunda-feira
+    - cron: '0 0 * * 1'
   push:
     branches: [main]
   pull_request_target:
@@ -14,6 +14,7 @@ permissions:
   security-events: write
   actions: read
   pull-requests: read
+  id-token: write
 
 jobs:
   dependency-scan:
@@ -49,11 +50,6 @@ jobs:
   code-scan:
     name: Análise de Código
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      actions: read
-      pull-requests: read
 
     steps:
       - name: Checkout código
