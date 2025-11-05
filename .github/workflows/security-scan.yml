@@ -2,7 +2,7 @@ name: Security Scan
 
 on:
   schedule:
-    - cron: '0 0 * * 1'
+    - cron: '0 0 * * 1' # roda toda segunda-feira
   push:
     branches: [main]
   pull_request_target:
@@ -48,7 +48,7 @@ jobs:
           retention-days: 30
 
   code-scan:
-    name: Análise de Código
+    name: Análise de Código (Privado)
     runs-on: ubuntu-latest
 
     steps:
@@ -64,4 +64,14 @@ jobs:
         uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
+        id: codeql
         uses: github/codeql-action/analyze@v3
+        continue-on-error: true
+
+      - name: Salvar resultado da análise (SARIF)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-report
+          path: /home/runner/work/${{ github.event.repository.name }}/results/javascript.sarif
+          retention-days: 15
