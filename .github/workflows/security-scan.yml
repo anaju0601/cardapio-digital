@@ -2,12 +2,18 @@ name: Security Scan
 
 on:
   schedule:
-    - cron: '0 0 * * 1'
+    - cron: '0 0 * * 1' # roda toda segunda-feira
   push:
     branches: [main]
-  pull_request:
+  pull_request_target:
     branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+  pull-requests: read
 
 jobs:
   dependency-scan:
@@ -44,8 +50,10 @@ jobs:
     name: Análise de Código
     runs-on: ubuntu-latest
     permissions:
-      security-events: write
       contents: read
+      security-events: write
+      actions: read
+      pull-requests: read
 
     steps:
       - name: Checkout código
@@ -54,7 +62,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: javascript-typescript
+          languages: javascript, typescript
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
