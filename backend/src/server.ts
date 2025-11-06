@@ -21,7 +21,13 @@ const allowedOrigins: string[] = [
 ].filter(Boolean) as string[]
 
 const corsOptions: CorsOptions = {
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
   credentials: true,
 }
 
