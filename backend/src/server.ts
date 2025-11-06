@@ -16,7 +16,7 @@ const PORT = Number(process.env.PORT) || 3001
 const allowedOrigins: string[] = [
   "http://localhost:3000",
   "http://localhost:3001",
-  "https://black-cliff-09ef7270f.3.azurestaticapps.net",
+  "https://black-cliff-09ef7270f.3.azurestaticapps.net/",
   process.env.FRONTEND_URL || ""
 ].filter(Boolean) as string[]
 
