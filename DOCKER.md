@@ -29,11 +29,9 @@ docker compose down --volumes --remove-orphans
 
 # Docker-compose para build
 docker compose build --no-cache 
-
 # Sobe o docker 
-docker compose build --no-cache 
+docker compose up
 \`\`\`
-
 ### Outros Comandos
 
 \`\`\`bash
