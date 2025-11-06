@@ -162,7 +162,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE.md) para
 
 ## 👥 Autores
 
-- **Ana Julia**, **Giovanni**, **Rafaela**, **Lucas** e **Augusto*
+- **Ana Julia**, **Giovanni**, **Rafaela**, **Lucas** e **Augusto**
 
 ## 🙏 Agradecimentos
 

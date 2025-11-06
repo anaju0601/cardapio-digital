@@ -72,3 +72,5 @@ volumes:
 networks:
   cardapio-network-dev:
     driver: bridge
+
+    
