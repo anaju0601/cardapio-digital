@@ -16,7 +16,7 @@ const PORT = Number(process.env.PORT) || 3001
 const allowedOrigins: string[] = [
   "http://localhost:3000",
   "http://localhost:3001",
-  "https://black-cliff-09ef7270f.3.azurestaticapps.net/",
+  "https://black-cliff-09ef7270f.3.azurestaticapps.net",
   process.env.FRONTEND_URL || ""
 ].filter(Boolean) as string[]
 
@@ -51,9 +51,11 @@ app.use(errorHandler)
 AppDataSource.initialize()
   .then(() => {
     console.log("✅ Database connected successfully")
+
     app.listen(PORT, "0.0.0.0", () => {
-      console.log(`🚀 Server running on port ${PORT}`)
-      console.log(`📘 Swagger docs: http://0.0.0.0:${PORT}/api-docs`)
+      const hostname = process.env.WEBSITE_HOSTNAME || `localhost:${PORT}`
+      console.log(`🚀 Server running at http://${hostname}`)
+      console.log(`📘 Swagger docs available at https://${hostname}/api-docs`)
       console.log(`🌐 Allowed origins: ${allowedOrigins.join(", ")}`)
     })
   })
