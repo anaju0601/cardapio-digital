@@ -31,6 +31,16 @@ const corsOptions: CorsOptions = {
   credentials: true,
 }
 
+// -----------------------------------------------------------
+// 🚀 INÍCIO DA CORREÇÃO
+// -----------------------------------------------------------
+// Diz ao Express para confiar no proxy reverso do Azure
+// Isto corrige problemas de 'mixed content' (HTTP/HTTPS) no Swagger
+app.set("trust proxy", 1)
+// -----------------------------------------------------------
+// 🚀 FIM DA CORREÇÃO
+// -----------------------------------------------------------
+
 app.use(cors(corsOptions))
 app.use(helmet())
 app.use(express.json())
@@ -53,9 +63,12 @@ AppDataSource.initialize()
     console.log("✅ Database connected successfully")
 
     app.listen(PORT, "0.0.0.0", () => {
+      // No Azure, process.env.WEBSITE_HOSTNAME será o URL correto
       const hostname = process.env.WEBSITE_HOSTNAME || `localhost:${PORT}`
+      // O log do Swagger estava a mostrar https incorretamente, vamos usar o protocolo correto
+      // O 'trust proxy' vai corrigir como o Swagger se apresenta
       console.log(`🚀 Server running at http://${hostname}`)
-      console.log(`📘 Swagger docs available at https://${hostname}`)
+      console.log(`📘 Swagger docs available at http://${hostname}/api-docs`)
       console.log(`🌐 Allowed origins: ${allowedOrigins.join(", ")}`)
     })
   })
