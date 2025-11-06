@@ -55,7 +55,7 @@ AppDataSource.initialize()
     app.listen(PORT, "0.0.0.0", () => {
       const hostname = process.env.WEBSITE_HOSTNAME || `localhost:${PORT}`
       console.log(`🚀 Server running at http://${hostname}`)
-      console.log(`📘 Swagger docs available at https://${hostname}/api-docs`)
+      console.log(`📘 Swagger docs available at https://${hostname}`)
       console.log(`🌐 Allowed origins: ${allowedOrigins.join(", ")}`)
     })
   })
