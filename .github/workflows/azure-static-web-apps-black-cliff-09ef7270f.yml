@@ -16,6 +16,7 @@ jobs:
     name: Build and Deploy Job
     env:
       NODE_VERSION: 20.11.1
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -27,6 +28,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js app
+        run: npm run build
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -35,9 +42,9 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           ###### Repository/Build Configurations ######
-          app_location: "/"           # Pasta raiz do app
-          api_location: ""            # Sem API separada
-          output_location: ".next"    # Pasta gerada pelo Next.js
+          app_location: "."           # 👈 Pasta raiz do app Next.js
+          api_location: ""            # Sem API (backend separado)
+          output_location: ".next"    # Saída padrão do Next.js
           ###### End of Configurations ######
 
   close_pull_request_job:
