@@ -1,28 +1,32 @@
 import swaggerJsdoc from "swagger-jsdoc"
 import type { SwaggerDefinition } from "swagger-jsdoc"
 import path from "path" // <-- IMPORTANTE: Importar o 'path'
+import fs from "fs"     // <-- IMPORTANTE: Importar o 'fs' (File System)
 
 // -----------------------------------------------------------
-// 🚀 INÍCIO DA CORREÇÃO
+// 🚀 INÍCIO DA CORREÇÃO ROBUSTA
 // -----------------------------------------------------------
 
-// 1. Verifica se estamos em ambiente de produção
-const isProduction = process.env.NODE_ENV === 'production'
+// 1. Define o caminho para a pasta 'dist'
+const distPath = path.join(process.cwd(), 'dist');
 
-// 2. Define os caminhos dos arquivos de API com base no ambiente
-// Usamos path.join(process.cwd(), ...) para garantir que o caminho
-// esteja correto, relativo à pasta /app (onde o processo corre).
+// 2. Verifica se a pasta 'dist' existe.
+// Esta é a forma mais fiável de saber se estamos em produção.
+const isProduction = fs.existsSync(distPath);
+
+// 3. Define os caminhos dos arquivos de API com base no ambiente
+// Usamos **/*.ts (glob recursivo) para encontrar ficheiros em subpastas.
 const apiFiles = isProduction
   ? [
-      path.join(process.cwd(), './dist/routes/*.js'), // Em produção, leia os arquivos JS compilados
-      path.join(process.cwd(), './dist/controllers/*.js'),
+      path.join(distPath, './routes/**/*.js'), // Em produção, leia os arquivos JS compilados
+      path.join(distPath, './controllers/**/*.js'),
     ]
   : [
-      path.join(process.cwd(), './src/routes/*.ts'), // Em desenvolvimento, leia os arquivos TS
-      path.join(process.cwd(), './src/controllers/*.ts'),
-    ]
+      path.join(process.cwd(), './src/routes/**/*.ts'), // Em desenvolvimento, leia os arquivos TS
+      path.join(process.cwd(), './src/controllers/**/*.ts'),
+    ];
 
-// 3. Define os servidores (agora com o seu URL real do Azure)
+// 4. Define os servidores
 const servers = [
   {
     url: "http://localhost:3001",
