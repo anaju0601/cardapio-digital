@@ -17,10 +17,6 @@ O projeto utiliza 3 containers principais:
 
 ### Desenvolvimento
 
-\`\`\`bash
-# Iniciar ambiente de desenvolvimento
-make dev
-
 # Ou usando docker-compose diretamente
 docker-compose -f docker-compose.dev.yml up --build
 \`\`\`
@@ -28,11 +24,14 @@ docker-compose -f docker-compose.dev.yml up --build
 ### Produção
 
 \`\`\`bash
-# Iniciar ambiente de produção
-make prod
+# Apaga tudo anteriormente
+docker compose down --volumes --remove-orphans    
 
-# Ou usando docker-compose diretamente
-docker-compose up --build
+# Docker-compose para build
+docker compose build --no-cache 
+
+# Sobe o docker 
+docker compose build --no-cache 
 \`\`\`
 
 ### Outros Comandos
