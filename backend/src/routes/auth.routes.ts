@@ -17,12 +17,15 @@ const authController = new AuthController()
  *       content:
  *         application/json:
  *           schema:
- *             type: object
+ *             type: object 
  *             required:
+ *               - name
  *               - email
  *               - password
- *               - name
  *             properties:
+ *               name:
+ *                 type: string
+ *                 example: João Silva
  *               email:
  *                 type: string
  *                 format: email
@@ -31,9 +34,6 @@ const authController = new AuthController()
  *                 type: string
  *                 format: password
  *                 example: senha123
- *               name:
- *                 type: string
- *                 example: João Silva
  *     responses:
  *       201:
  *         description: Usuário criado com sucesso
