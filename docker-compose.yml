@@ -49,7 +49,7 @@ services:
     image: raffolas/cardapio-frontend
     container_name: cardapio-frontend
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NEXT_PUBLIC_API_URL: cardapio-api-bygeddb7fwbph8gp.eastus2-01.azurewebsites.net
     ports:
       - "3000:3000"
     depends_on:
