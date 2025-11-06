@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/0b5de598-d840-4259-a384-68c5888773bd/resourceGroups/rg-cardapio/providers/Microsoft.Web/sites/cardapio-api",
+    "appService.deploySubpath": "."
+}
