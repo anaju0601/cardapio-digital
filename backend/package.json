@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
-    "postinstall": "npm run build",
     "start": "node dist/server.js",
     "typeorm": "typeorm-ts-node-commonjs",
     "test": "echo \"Testes não implementados ainda\" && exit 0",
