@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -17,10 +19,12 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      target: development # Mira no estágio de 'desenvolvimento'
     container_name: cardapio-backend-dev
     ports:
       - "3001:3001"
     environment:
+      CI: "true" # Impede o pnpm de fazer perguntas
       NODE_ENV: development
       DB_HOST: postgres
       DB_PORT: 5432
@@ -35,15 +39,18 @@ services:
       - postgres
     networks:
       - cardapio-network-dev
-    command: npx pnpm run dev
+    # --- CORREÇÃO AQUI ---
+    # Instala E roda (corrige problema de 'volumes')
+    command: sh -c "pnpm install && pnpm run dev"
 
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile.frontend
+      context: . 
+      dockerfile: Dockerfile.frontend 
+      target: deps # Mira no estágio de 'dependências'
     container_name: cardapio-frontend-dev
-    user: root
     environment:
+      CI: "true" # Impede o pnpm de fazer perguntas
       NEXT_PUBLIC_API_URL: http://localhost:3001
     ports:
       - "3000:3000"
@@ -55,7 +62,9 @@ services:
       - backend
     networks:
       - cardapio-network-dev
-    command: npx pnpm run dev
+    # --- CORREÇÃO AQUI ---
+    # Instala E roda (corrige problema de 'volumes')
+    command: sh -c "pnpm install && pnpm run dev"
 
 volumes:
   postgres_data_dev:
